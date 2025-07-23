@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UXF200 Grocery App - Dark Theme</title>
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        /* Reset default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Main body styling with dark theme */
+        body {
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text for contrast */
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* Container for page content with padding */
+        .container {
+            padding: 15px;
+            padding-bottom: 70px; /* Extra space for bottom nav */
+        }
+        
+        /* Headings with accent color */
+        h1, h2, h3 {
+            margin-bottom: 15px;
+            color: #4caf50; /* Green accent color */
+        }
+        
+        /* ===== CARD COMPONENTS ===== */
+        /* Card styling for content containers */
+        .card {
+            background-color: #1e1e1e; /* Dark card background */
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); /* Deeper shadow for dark theme */
+            border: 1px solid #333; /* Subtle border */
+        }
+        
+        /* Spent amount styling - larger text */
+        .spent-amount {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff; /* Brighter white for important numbers */
+        }
+        
+        /* Divider between sections */
+        .divider {
+            height: 1px;
+            background-color: #333; /* Dark divider */
+            margin: 15px 0;
+        }
+        
+        /* ===== LIST ITEMS ===== */
+        /* Styled list items with accent border */
+        .list-item {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 3px solid #4caf50; /* Green accent border */
+        }
+        
+        /* ===== BUDGET PROGRESS ===== */
+        /* Container for budget progress */
+        .budget-progress {
+            margin-bottom: 15px;
+        }
+        
+        /* Background of progress bar */
+        .progress-bar {
+            height: 10px;
+            background-color: #333; /* Dark background for progress bar */
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        /* Filled portion of progress bar */
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50; /* Green progress fill */
+            width: 62%; /* Dynamically set via JS */
+        }
+        
+        /* ===== CATEGORY ITEMS ===== */
+        /* Layout for category breakdown items */
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #333; /* Dark border */
+        }
+        
+        /* ===== INSIGHTS CARDS ===== */
+        /* Special styling for insight cards */
+        .insight-card {
+            background-color: #2a2a2a; /* Slightly lighter dark background */
+            border-left: 3px solid #4caf50; /* Green accent */
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* ===== WEEKLY SPENDING CARDS ===== */
+        /* Layout for weekly spending cards */
+        .week-card {
+            display: inline-block;
+            width: 48%;
+            margin-right: 2%;
+            vertical-align: top;
+            background-color: #1e1e1e; /* Matching card background */
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .week-card:last-child {
+            margin-right: 0;
+        }
+        
+        /* ===== PRODUCT CARDS ===== */
+        /* Layout for product display */
+        .product-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #252525; /* Slightly lighter than card */
+            border-radius: 8px;
+        }
+        
+        .product-info {
+            flex: 1;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #4caf50; /* Green accent */
+        }
+        
+        /* ===== CATEGORY GRID ===== */
+        /* Grid layout for category browsing */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        /* Individual category boxes */
+        .category-box {
+            background-color: #252525;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .category-box:hover {
+            transform: translateY(-2px);
+            background-color: #2e2e2e;
+        }
+        
+        /* ===== PROFILE SECTION ===== */
+        /* Profile header layout */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Profile picture placeholder */
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4caf50; /* Green background */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        /* Stats display under profile */
+        .profile-stats {
+            display: flex;
+            margin: 15px 0;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4caf50; /* Green accent */
+        }
+        
+        /* Menu items in profile */
+        .menu-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #333; /* Dark border */
+            transition: background-color 0.2s;
+        }
+        
+        .menu-item:hover {
+            background-color: #252525;
+        }
+        
+        /* ===== BOTTOM NAVIGATION ===== */
+        /* Fixed bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #1e1e1e; /* Dark nav background */
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+            max-width: 500px;
+            margin: 0 auto;
+            border-top: 1px solid #333;
+        }
+        
+        /* Individual nav items */
+        .nav-item {
+            text-align: center;
+            color: #9e9e9e; /* Gray for inactive items */
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        /* Active nav item styling */
+        .nav-item.active {
+            color: #4caf50; /* Green for active item */
+            font-weight: bold;
+        }
+        
+        /* ===== PAGE MANAGEMENT ===== */
+        /* Hide all pages by default */
+        .page {
+            display: none;
+        }
+        
+        /* Show active page */
+        .page.active {
+            display: block;
+        }
+        
+        /* ===== MISC COMPONENTS ===== */
+        /* Badge styling for notifications */
+        .badge {
+            background-color: #f44336; /* Red badge */
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        /* Button styling */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #3d8b40;
+        }
+        
+        /* Secondary button */
+        button.secondary {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+        
+        button.secondary:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+        ===== HOME PAGE =====
+        Main dashboard view with budget overview and quick actions
+    -->
+    <div class="container page active" id="home-page">
+        <h1>Monthly Budget</h1>
+        
+        <div class="card">
+            <h2>Spent</h2>
+            <div class="spent-amount">$247.80</div>
+            <div class="spent-amount">$2400.00</div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="card">
+            <h3>Quick Reorder</h3>
+            <p>Last week's order</p>
+        </div>
+        
+        <div class="card">
+            <h3>Smart Lists</h3>
+            <p>Ai-powered lists</p>
+        </div>
+        
+        <div class="card">
+            <h3>Smart Saved Lists</h3>
+            <div class="list-item">Weekly Essentials</div>
+            <p>Empty + Auto-lip/dated</p>
+        </div>
+        
+        <div class="card">
+            <h3>Mail Prep</h3>
+            <p>Empty + Customs</p>
+        </div>
+        
+        <div class="card">
+            <h3>Baby Supplies</h3>
+            <p>Empty + Securing</p>
+        </div>
+        
+        <div class="card">
+            <div class="spent-amount">$45.20</div>
+            <p>Fat total</p>
+        </div>
+        
+        <div class="card">
+            <div class="spent-amount">$32.80</div>
+            <p>Fat total</p>
+        </div>
+        
+        <div class="card">
+            <h3>Quick Reorder Templates</h3>
+            <div class="list-item">Last Week's Order</div>
+            <p>E-Member Ordered 7 days ago</p>
+        </div>
+        
+        <div class="card">
+            <h3>Monthly Bulk Order</h3>
+            <p>22 Hours + Next: March 15</p>
+        </div>
+        
+        <div class="card">
+            <div class="spent-amount">$124.80</div>
+            <p>Monday</p>
+        </div>
+        
+        <div class="card">
+            <h3>Spending Breakdown</h3>
+            <div class="list-item">Produce $89.20</div>
+            <div class="list-item">Dairy & Eggs $48.80</div>
+            <div class="list-item">Meat & Seafood $67.30</div>
+            <div class="list-item">Pantry $45.50</div>
+        </div>
+    </div>
+    
+    <!-- 
+        ===== BUDGET PAGE =====
+        Detailed budget tracking and insights 
+    -->
+    <div class="container page" id="budget-page">
+        <h1>Monthly Budget $247.80</h1>
+        
+        <div class="card">
+            <p>of $400.00 spent:</p>
+            <div class="spent-amount">$245, used</div>
+            <div class="spent-amount">$152.20 remaining</div>
+            
+            <div class="budget-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Category Breakdown</h2>
+            
+            <div class="category-item">
+                <span>Produce</span>
+                <span>$89.20</span>
+            </div>
+            
+            <div class="category-item">
+                <span>Meat & Seafood</span>
+                <span>$67.30</span>
+            </div>
+            
+            <div class="category-item">
+                <span>Dairy & Eggs</span>
+                <span>$48.80</span>
+            </div>
+            
+            <div class="category-item">
+                <span>Pantry</span>
+                <span>$45.50</span>
+            </div>
+            
+            <div class="category-item">
+                <span>Its alone</span>
+                <span class="badge">-300.00 badge!</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Smart Insights</h2>
+            
+            <div class="insight-card">
+                <p>Great Progress!</p>
+                <p>You're staying within budget this month. Keep it up!</p>
+            </div>
+            
+            <div class="insight-card">
+                <p>Produce Spending High</p>
+                <p>You've spent 80% of your produce budget. Consider bulk buying.</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Weekly Spending</h2>
+            
+            <div class="week-card">
+                <p>This Week</p>
+                <div class="spent-amount">$67.45</div>
+                <p>Mar 4-10</p>
+            </div>
+            
+            <div class="week-card">
+                <p>Last Week</p>
+                <div class="spent-amount">$89.20</div>
+                <p>Feb 26-Mar 3</p>
+            </div>
+            
+            <div class="week-card">
+                <p>2 Weeks Ago</p>
+                <div class="spent-amount">$91.15</div>
+                <p>Feb 19-25</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 
+        ===== BROWSE PAGE =====
+        Product browsing and category view 
+    -->
+    <div class="container page" id="browse-page">
+        <h1>Featured Products</h1>
+        
+        <div class="card">
+            <h3>Organic Apples</h3>
+            <div class="product-card">
+                <div class="product-info">
+                    <p>Organic Red Apples</p>
+                    <p>2 lbs bag</p>
+                </div>
+                <div class="product-price">$4.99</div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-info">
+                    <p>Whole Milk</p>
+                    <p>1 gallon</p>
+                </div>
+                <div class="product-price">$3.49</div>
+            </div>
+        </div>
+        
+        <h2>Shop by Category</h2>
+        <div class="category-grid">
+            <div class="category-box">
+                <h3>Produce</h3>
+            </div>
+            <div class="category-box">
+                <h3>Dairy</h3>
+            </div>
+            <div class="category-box">
+                <h3>Meat</h3>
+            </div>
+            <div class="category-box">
+                <h3>Pantry</h3>
+            </div>
+        </div>
+        
+        <h2>All Products</h2>
+        <div class="card">
+            <div class="product-card">
+                <div class="product-info">
+                    <p>Fresh Bananas</p>
+                    <p>Per pound</p>
+                </div>
+                <div class="product-price">$1.29</div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-info">
+                    <p>Whole Wheat Bread</p>
+                    <p>Bread</p>
+                </div>
+                <div class="product-price">$2.99</div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-info">
+                    <p>Chicken Breast</p>
+                    <p>Chicken</p>
+                </div>
+                <div class="product-price">$6.99</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 
+        ===== PROFILE PAGE =====
+        User profile and settings 
+    -->
+    <div class="container page" id="profile-page">
+        <div class="profile-header">
+            <div class="profile-pic">SJ</div>
+            <div>
+                <h1>Sarah Johnson</h1>
+                <p>sarah.johnson@email.com</p>
+                <p>📌 4.8 💬 47 orders</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">$1,247</div>
+                    <p>Total Saved</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">23</div>
+                    <p>Active Lists</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Personal Information</h2>
+            
+            <div class="menu-item">Payment Methods</div>
+            <div class="menu-item">Delivery Addresses</div>
+            <div class="menu-item">Order History</div>
+            <div class="menu-item">Favorite Products</div>
+            <div class="menu-item">Notifications</div>
+            <div class="menu-item">Help & Support</div>
+            <div class="menu-item">Privacy & Security</div>
+        </div>
+        
+        <div class="card">
+            <button>Edit Profile</button>
+            <button class="secondary">Sign Out</button>
+        </div>
+    </div>
+    
+    <!-- 
+        ===== BOTTOM NAVIGATION =====
+        Fixed navigation bar at bottom of screen 
+    -->
+    <div class="bottom-nav">
+        <div class="nav-item active" data-page="home-page">
+            Home
+        </div>
+        <div class="nav-item" data-page="budget-page">
+            Budget
+        </div>
+        <div class="nav-item" data-page="browse-page">
+            Browse
+        </div>
+        <div class="nav-item" data-page="profile-page">
+            Profile
+        </div>
+    </div>
+    
+    <script>
+        /**
+         * ===== JAVASCRIPT FUNCTIONALITY =====
+         * Handles page navigation and dynamic elements
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation functionality
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            
+            // Add click event to each navigation item
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all nav items and pages
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    pages.forEach(page => page.classList.remove('active'));
+                    
+                    // Add active class to clicked nav item
+                    this.classList.add('active');
+                    
+                    // Show corresponding page
+                    const pageId = this.getAttribute('data-page');
+                    document.getElementById(pageId).classList.add('active');
+                });
+            });
+            
+            // Simulate dynamic progress bar (would be calculated from real data in production)
+            const progressFill = document.querySelector('.progress-fill');
+            const spent = 247.80;
+            const budget = 400.00;
+            const percentage = (spent / budget) * 100;
+            progressFill.style.width = `${percentage}%`;
+            
+            // Add hover effects to menu items
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // In a real app, this would navigate to the appropriate section
+                    alert(`Navigating to ${this.textContent}`);
+                });
+            });
+            
+            // Add click effect to category boxes
+            const categoryBoxes = document.querySelectorAll('.category-box');
+            categoryBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    // In a real app, this would filter products by category
+                    alert(`Showing ${this.querySelector('h3').textContent} category`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
